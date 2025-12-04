@@ -1,0 +1,46 @@
+name: Deploy Vite site to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: horizons-export-1b34245c-268a-4456-be0e-28885d44c100
+        run: npm ci
+
+      - name: Build Vite site
+        working-directory: horizons-export-1b34245c-268a-4456-be0e-28885d44c100
+        run: npm run build
+
+      - name: Upload dist
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: horizons-export-1b34245c-268a-4456-be0e-28885d44c100/dist
+
+  deploy:
+    permissions:
+      pages: write
+      id-token: write
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
