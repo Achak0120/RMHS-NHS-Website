@@ -10,10 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
 
@@ -25,22 +26,23 @@ jobs:
         working-directory: horizons-export-1b34245c-268a-4456-be0e-28885d44c100
         run: npm run build
 
-      - name: Upload dist
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
           path: horizons-export-1b34245c-268a-4456-be0e-28885d44c100/dist
 
   deploy:
+    runs-on: ubuntu-latest
+    needs: build
     permissions:
       pages: write
       id-token: write
-    runs-on: ubuntu-latest
-    needs: build
+
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url }}
 
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+        id: deploy
+        uses: actions/deploy-pages@v4
