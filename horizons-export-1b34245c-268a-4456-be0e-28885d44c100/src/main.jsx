@@ -7,12 +7,10 @@ import { Toaster } from '@/components/ui/toaster';
 import { AdminAuthProvider } from '@/contexts/AdminAuthContext';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <>
-    <BrowserRouter>
-      <AdminAuthProvider>
-        <App />
-        <Toaster />
-      </AdminAuthProvider>
-    </BrowserRouter>
-  </>
+  <BrowserRouter basename={import.meta.env.BASE_URL}>
+    <AdminAuthProvider>
+      <App />
+      <Toaster />
+    </AdminAuthProvider>
+  </BrowserRouter>
 );
